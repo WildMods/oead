@@ -49,6 +49,8 @@ add_library(oead
   src/yaml.cpp
   src/yaml.h
   src/yaz0.cpp
+  src/vmem_windows.c
+  src/vmem_posix.c
 )
 
 target_include_directories(oead PUBLIC src/include)

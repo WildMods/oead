@@ -51,6 +51,9 @@ std::optional<Header> GetHeader(tcb::span<const u8> data);
 std::vector<u8> Compress(tcb::span<const u8> src, u32 data_alignment = 0, int level = 7);
 
 std::vector<u8> Decompress(tcb::span<const u8> src);
+
+std::vector<u8> DecompressMapped(const char* path);
+
 /// For increased flexibility, allocating the destination buffer can be done manually.
 /// In that case, the header is assumed to be valid, and the buffer size
 /// must be equal to the uncompressed data size.

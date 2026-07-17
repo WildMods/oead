@@ -22,9 +22,11 @@
 #include <cstring>
 
 #include <zlib-ng.h>
+#include <sys/stat.h>
 
 #include <oead/util/binary_reader.h>
 #include <oead/yaz0.h>
+#include "vmem.h"
 
 namespace oead::yaz0 {
 
@@ -176,6 +178,22 @@ static void Decompress(tcb::span<const u8> src, tcb::span<u8> dst) {
 
 void Decompress(tcb::span<const u8> src, tcb::span<u8> dst) {
   Decompress<true>(src, dst);
+}
+
+std::vector<u8> DecompressMapped(const char* path) {
+    struct stat st;
+    if (stat(path, &st) != 0) {
+        return {};
+    }
+    void* data = vmem_map_file(path);
+    if (!data) {
+        return {};
+    }
+
+    std::vector<u8> result = Decompress({(const u8*)data, (size_t)st.st_size});
+
+    vmem_unmap_file(data, st.st_size);
+    return result;
 }
 
 void DecompressUnsafe(tcb::span<const u8> src, tcb::span<u8> dst) {
